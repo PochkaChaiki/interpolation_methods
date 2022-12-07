@@ -9,4 +9,4 @@ Here are the methods:
   4.) Linear interpolation - coded by Famutdinov A.
 
 Framework was coded by Kostenko E.
-This is our latest masterpiece, so you have to check it. It was done so good because of mutual understanding between each member of our group, WE ARE THE TEAM.
+This is our latest masterpiece, so you have to check it. It was done so good because of mutual understanding between each member of our group, #WE ARE THE TEAM.
