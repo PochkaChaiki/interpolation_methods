@@ -9,7 +9,7 @@ struct Point
 	double y;
 };
 
-vector<double> spline(vector <Point> train, vector<double> test)
+vector<double> Linear(vector <Point> train, vector<double> test)
 {
 	vector<double> ytest;
 	ytest.reserve(test.size());
