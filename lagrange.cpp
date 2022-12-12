@@ -9,14 +9,18 @@ struct Point
     double y; 
 };
 
-vector<double> Lagrange(vector<Point>p, vector <double> newx) {
+vector<double> Lagrange(vector<Point>p, vector <double> newx) 
+{
     vector <double> ys;
     ys.reserve(newx.size());
-    for (int k = 0; k < newx.size(); k++) {
+    for (int k = 0; k < newx.size(); k++) 
+    {
         double result = 0;
-        for (int i = 0; i < p.size(); i++) {
+        for (int i = 0; i < p.size(); i++) 
+        {
             double y = p[i].y;
-            for (int j = 0; j < p.size(); j++) {
+            for (int j = 0; j < p.size(); j++) 
+            {
                 if (j != i) y *= (newx[k] - p[j].x) / (p[i].x - p[j].x);
             }
             result += y;
