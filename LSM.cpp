@@ -7,8 +7,7 @@ struct Point
     double x;
     double y;
 };
-vector <double> LSM(vector <Point> p, vector <double> newx) {
-    int  polinom = 1;
+vector <double> LSM(vector <Point> p, vector <double> newx, int  polinom = 1) {
     vector <vector<double>> matrix;
     for (int i = 0; i <= polinom; ++i)
     {
