@@ -394,7 +394,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Users' files
-./vscode
+/.vscode
 *.exe
 *.o
 Makefile

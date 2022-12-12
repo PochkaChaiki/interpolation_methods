@@ -14,7 +14,7 @@ std::vector<double> Lagrange(std::vector<Point> p, std::vector <double> newx);
 
 std::vector<double> Linear(std::vector <Point> p, std::vector<double> newx);
 
-std::vector<double> LSM(std::vector <Point> p, std::vector <double> newx);
+std::vector<double> LSM(std::vector <Point> p, std::vector <double> newx, int polinom = 1);
 
 
 #endif
