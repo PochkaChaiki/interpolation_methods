@@ -12,17 +12,17 @@ vector <double> LSM(vector <Point> p, vector <double> newx, int  polinom = 1) {
     for (int i = 0; i <= polinom; ++i)
     {
         vector<double> a;
-        double sum_b = 0;
+        double sum_xy = 0;
         for (int j = 0; j <= polinom; ++j)
         {
-            double sum_a = 0;
+            double sum_x = 0;
             for (int k = 0; k < p.size(); ++k)
-                sum_a += pow(p[k].x, i + j);
-            a.push_back(sum_a);
+                sum_x += pow(p[k].x, i + j);
+            a.push_back(sum_x);
         }
         for (int j = 0; j < p.size(); ++j)
-            sum_b += p[j].y * pow(p[j].x, i);
-        a.push_back(sum_b);
+            sum_xy += p[j].y * pow(p[j].x, i);
+        a.push_back(sum_xy);
         matrix.push_back(a);
     }
     for (int i = 0; i <= polinom; ++i)
