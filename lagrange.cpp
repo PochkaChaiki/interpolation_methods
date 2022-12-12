@@ -3,8 +3,10 @@
 #include <fstream>
 using namespace std;
 
-struct Point {
-    double x, y; 
+struct Point
+{
+    double x;
+    double y; 
 };
 
 vector<double> Lagrange(vector<Point>p, vector <double> newx) {
