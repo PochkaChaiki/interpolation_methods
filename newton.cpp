@@ -16,9 +16,10 @@ vector <double> Newton(vector <Point> p, vector <double> newx)
     result.reserve(newx.size());
     for (int l = 0; l < newx.size(); l++)
     {
-		double sum = p[0].y;
+        double sum;
         for(int i = 1; i < p.size(); ++i)
         {
+            sum = p[0].y;
             double F = 0;
             for(int j = 0; j <= i; ++j)
             {    
