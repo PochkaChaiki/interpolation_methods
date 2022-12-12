@@ -9,10 +9,11 @@ struct Point
     double x;
     double y; 
 };
-
+//Function thet returns a vector of values obtained by the method
 vector<double> Lagrange(vector<Point>p, vector <double> newx) 
 {
     vector <double> ys;
+//Allocate memory for the vector of received values
     ys.reserve(newx.size());
 
     for (int k = 0; k < newx.size(); k++) 
