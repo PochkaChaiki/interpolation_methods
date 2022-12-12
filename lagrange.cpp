@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include <fstream>
+
 using namespace std;
 
 struct Point
@@ -13,6 +14,7 @@ vector<double> Lagrange(vector<Point>p, vector <double> newx)
 {
     vector <double> ys;
     ys.reserve(newx.size());
+
     for (int k = 0; k < newx.size(); k++) 
     {
         double result = 0;
