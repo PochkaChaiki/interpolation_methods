@@ -47,9 +47,9 @@ long double r2_score(std::vector<double> y_true, std::vector<double> y_predicted
 }
 
 void gen(std::vector<Point>& data, std::vector<double>& testx, std::vector<double>& testy){
-    // auto f = [] (double x) { return std::sin(std::pow(x, 3/2)) / std::log(x);};
+    auto f = [] (double x) { return std::sin(std::pow(x, 3/2)) / std::log(x);};
     // auto f = [] (double x) {return std::pow(x, 3);};
-    auto f = [] (double x) {return x;};
+    // auto f = [] (double x) {return x;};
     int pointsAmount = 100;
     double lb = 1.5;
     double rb = 10;
@@ -102,33 +102,16 @@ void getValuesFromFile(std::vector<Point>& data, std::vector<double>& testx, std
     fin.close();
 }
 
-int main(){
-    std::unordered_map<std::string, Method> interpolationMethods {{"Newton",Newton}, {"Linear", Linear}, {"Lagrange", Lagrange}};
-    std::vector<Point> data;
-    std::vector<double> testx;
-    std::vector<double> testy;
-    
-    gen(data, testx, testy);
-    
-    // getValuesFromFile(data, testx, testy);
-    printValues(testy);
-    
-    std::cout<<"Methods"<<std::endl;
-    for (auto [name, method]: interpolationMethods){
-        auto start = std::chrono::system_clock::now();
-        std::vector<double> result = method(data, testx);
-        auto end = std::chrono::system_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-        std::cout<<name<<" duration is: " << (int)duration << std::endl;
-        double error = meanAbsoluteError(testy, result);
-        std::cout << "Mean Absolute Error for " << name << " is " << error << std::endl;
-        error = SMAPE(testy, result);
-        std::cout << "SMAPE for " << name << " is " << error << std::endl;
-        error = r2_score(testy, result);
-        std::cout << "R2 score for " << name << " is " << error << std::endl << std::endl;
-        printValues(result);
-    }
+void passValuesToFile(std::vector<double>& result, double mae, double smape, double r2_score, int64_t time){
+    std::ofstream fout;
+    fout.open("result.txt", std::ios::app);
+    for (auto& i: result)
+        fout << i << " ";
+    fout << mae << ' ' << smape << ' ' << r2_score << ' ' << time << '\n';
+    fout.close();
+}
 
+int selectPolinomialDegree(std::vector<Point>& data, std::vector<double>& testx, std::vector<double>& testy){
     int polinomDegree = 1;
     double error = -__DBL_MAX__;
     std::vector<double> result = LSM(data, testx, polinomDegree);
@@ -138,21 +121,74 @@ int main(){
         result.clear();
         result = LSM(data, testx, polinomDegree);
     }
-
     result.clear();
-    polinomDegree--;
+    return --polinomDegree;
+}
+
+std::vector<Point> selectBetterPoints(Method method, const std::vector<Point>& data, std::vector<double>& testy, std::vector<double>& testx){
+    std::vector<Point> dataSelect = data;
+    std::vector<Point> copyDataSelect;
+    double error = -__DBL_MAX__;
+    std::vector<double> result = method(dataSelect, testx);
+    int counter(2);
+    while((error <= r2_score(testy, result))&& (counter < data.size())){
+        error = r2_score(testy, result);
+        copyDataSelect.clear();
+        copyDataSelect = dataSelect;
+        dataSelect.clear();
+        dataSelect.reserve(data.size()/counter);
+        for (int i(0); i < data.size(); ++i){
+            if (i % counter == 1) {
+                dataSelect.push_back(data[i]);
+            }
+        };
+        counter++;
+        result.clear();
+        result = method(dataSelect, testx);
+    }
+    result.clear();
+    return copyDataSelect;
+}
+
+int main(){
+    std::unordered_map<std::string, Method> interpolationMethods { {"Newton",Newton}, {"Lagrange", Lagrange}}; // 
+    std::vector<Point> data;
+    std::vector<double> testx;
+    std::vector<double> testy;
+    
+    gen(data, testx, testy);
+    // getValuesFromFile(data, testx, testy);
+    
+    std::cout<<"Methods"<<std::endl;
+    std::ofstream fout("result.txt", std::ios::out);
+    for (auto& i: testx)
+        fout << i <<' ';
+    fout << std::endl;
+    for (auto& i: testy)
+        fout << i <<' ';
+    fout << std::endl;
+
     auto start = std::chrono::system_clock::now();
-    result = LSM(data, testx, polinomDegree);
+    std::vector<double> result = Linear(data, testx);
     auto end = std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    std::cout<<"LSM duration is: " << (int)duration << std::endl;
-    error = meanAbsoluteError(testy, result);
-    std::cout << "Polinom degree is: " <<polinomDegree<<std::endl;
-    std::cout << "Mean Absolute Error for LSM is " << error << std::endl;
-    error = SMAPE(testy, result);
-    std::cout << "SMAPE for LSM is " << error << std::endl;
-    error = r2_score(testy, result);
-    std::cout << "R2 score for LSM is " << error << std::endl << std::endl; 
-    printValues(result);
+    std::cout << "ERROR: "<<r2_score(testy, result)<<std::endl;
+    passValuesToFile(result, meanAbsoluteError(testy, result), SMAPE(testy, result), r2_score(testy, result), duration);
+
+    for (auto [name, method]: interpolationMethods){
+        start = std::chrono::system_clock::now();
+        result = method(selectBetterPoints(method, data, testy, testx), testx);
+        end = std::chrono::system_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+        std::cout << "ERROR: "<<r2_score(testy, result)<<std::endl;
+        passValuesToFile(result, meanAbsoluteError(testy, result), SMAPE(testy, result), r2_score(testy, result), duration);
+    }
+
+    int polinomDegree = selectPolinomialDegree(data, testx, testy);
+    start = std::chrono::system_clock::now();
+    result = LSM(data, testx, polinomDegree);
+    end = std::chrono::system_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    passValuesToFile(result, meanAbsoluteError(testy, result), SMAPE(testy, result), r2_score(testy, result), duration);
     return 0;
 }
