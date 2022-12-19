@@ -403,3 +403,6 @@ Makefile
 *.vcxproj
 *.vcxproj.filters
 *.txt
+*.py
+*.png
+gen.cpp
