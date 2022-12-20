@@ -9,7 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.txt
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -402,7 +402,7 @@ Makefile
 *.rc
 *.vcxproj
 *.vcxproj.filters
-*.txt
+
 *.py
 *.png
 gen.cpp
