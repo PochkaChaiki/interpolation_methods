@@ -10,3 +10,6 @@ Here are the methods:
 
 Framework was coded by Kostenko E.
 This is our latest masterpiece, so you have to check it. It was done so good because of mutual understanding between each member of our group, WE ARE THE TEAM.
+
+КОМАНДА УЛЫБКА.
+Наш девиз всего три слова - улыбаться это клево!
